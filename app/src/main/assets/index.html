@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Shaadi AI – Wedding Video Maker</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@600;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff8f0;--fg:#3b1a12;--card:#ffffff;--line:#ecd9c6;--acc:#b45309;--accfg:#ffffff;--mut:#7a5c4d;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1a0d0a;--fg:#fbe9d8;--card:#2a1612;--line:#4a2b22;--acc:#f59e0b;--accfg:#2a1200;--mut:#c9a893}}
+:root[data-theme="dark"]{--bg:#1a0d0a;--fg:#fbe9d8;--card:#2a1612;--line:#4a2b22;--acc:#f59e0b;--accfg:#2a1200;--mut:#c9a893}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Noto Sans Devanagari",system-ui,sans-serif;line-height:1.5}
+header{text-align:center;padding:20px 16px 8px}
+h1{margin:0;font-family:"Noto Serif Devanagari",serif;font-size:26px;color:var(--acc)}
+header p{margin:4px 0 0;color:var(--mut);font-size:14px}
+main{max-width:1100px;margin:0 auto;padding:12px 14px 40px;display:grid;gap:16px}
+@media(min-width:900px){main{grid-template-columns:380px 1fr;align-items:start}.pv{position:sticky;top:12px}}
+.pv{order:-1}@media(min-width:900px){.pv{order:0}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
+label{display:block;font-size:13px;font-weight:600;margin:12px 0 4px}
+input[type=text],input[type=date],textarea,select{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--fg);font:inherit}
+textarea{resize:vertical;min-height:64px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.seg{display:flex;gap:8px;flex-wrap:wrap}
+.seg button,.btn{border:1px solid var(--line);background:var(--bg);color:var(--fg);border-radius:10px;padding:9px 12px;font:inherit;font-weight:600;cursor:pointer}
+.seg button.on{border-color:var(--acc);outline:2px solid var(--acc)}
+.sw{display:inline-block;width:14px;height:14px;border-radius:50%;margin-right:6px;vertical-align:-2px}
+.btn.pri{background:var(--acc);color:var(--accfg);border-color:var(--acc)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+canvas{width:100%;height:auto;aspect-ratio:16/9;border-radius:12px;background:#000;display:block}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+input[type=range]{width:100%;margin-top:10px;accent-color:var(--acc)}
+#msg{min-height:22px;font-size:14px;color:var(--mut);margin-top:8px}
+.note{font-size:12px;color:var(--mut);margin-top:10px}
+a.btn{text-decoration:none;display:inline-block}
+</style>
+</head>
+<body>
+<header>
+  <h1>Shaadi AI – Wedding Video Maker</h1>
+  <p>जानकारी भरें, फोटो जोड़ें और शादी का Invitation Video तैयार करें</p>
+</header>
+<main>
+  <section class="card" id="form">
+    <div class="row">
+      <div><label for="groom">दूल्हे का नाम</label><input type="text" id="groom" value="आरव"></div>
+      <div><label for="bride">दुल्हन का नाम</label><input type="text" id="bride" value="सिया"></div>
+    </div>
+    <div class="row">
+      <div><label for="gphoto">दूल्हे की फोटो</label><input type="file" id="gphoto" accept="image/*"></div>
+      <div><label for="bphoto">दुल्हन की फोटो</label><input type="file" id="bphoto" accept="image/*"></div>
+    </div>
+    <div class="row">
+      <div><label for="tilak">तिलक की तारीख</label><input type="date" id="tilak"></div>
+      <div><label for="haldi">हल्दी की तारीख</label><input type="date" id="haldi"></div>
+    </div>
+    <label for="wedding">शादी की तारीख</label><input type="date" id="wedding">
+    <label for="venue">शादी का पूरा पता</label><textarea id="venue" placeholder="जैसे: राज पैलेस, एमजी रोड, हावेरी, कर्नाटक"></textarea>
+    <label>वीडियो थीम</label>
+    <div class="seg" id="themes">
+      <button data-v="royal" class="on"><span class="sw" style="background:#7a1230"></span>Royal</button>
+      <button data-v="traditional"><span class="sw" style="background:#c2121b"></span>Traditional</button>
+      <button data-v="modern"><span class="sw" style="background:#16213a"></span>Modern</button>
+      <button data-v="floral"><span class="sw" style="background:#f3b6c0"></span>Floral</button>
+    </div>
+    <label>भाषा</label>
+    <div class="seg" id="langs"><button data-v="hi" class="on">हिंदी</button><button data-v="en">English</button></div>
+    <div class="row">
+      <div><label for="voice">Voice-over</label>
+        <select id="voice"><option value="off">बंद</option><option value="f">महिला</option><option value="m">पुरुष</option></select></div>
+      <div><label for="music">संगीत</label>
+        <select id="music"><option value="1">शहनाई + ढोलक</option><option value="0">बिना संगीत</option></select></div>
+    </div>
+  </section>
+
+  <section class="card pv">
+    <canvas id="cv" width="1280" height="720"></canvas>
+    <input type="range" id="seek" min="0" max="48" step="0.1" value="12" aria-label="वीडियो की स्थिति">
+    <div class="bar">
+      <button class="btn pri" id="play">▶ Preview चलाएँ</button>
+      <button class="btn" id="stop">⏹ रोकें</button>
+      <button class="btn" id="save">⬇ वीडियो सेव करें</button>
+      <a class="btn" id="wa" target="_blank" rel="noopener">WhatsApp पर शेयर</a>
+    </div>
+    <div id="msg"></div>
+    <div class="note">वीडियो 48 सेकंड का, 16:9 (1280×720) है। सेव करने में वीडियो असली समय में रिकॉर्ड होता है, इसलिए 48 सेकंड तक यह टैब खुला रखें। Voice-over सिर्फ़ Preview में सुनाई देता है, सेव वीडियो में संगीत जाता है। AI Cinematic सीन और 4K इस वर्ज़न में नहीं हैं।</div>
+  </section>
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+const W=1280,H=720,SCN=8,N=6,TOTAL=48;
+const SERIF='"Noto Serif Devanagari","Tiro Devanagari Hindi",Georgia,serif';
+const cv=$('cv'),ctx=cv.getContext('2d');
+const TH={
+ royal:{bg:['#3b0a1a','#12030a'],ac:'#f5c46b',tx:'#fff4dc',sub:'#e8b4b8'},
+ traditional:{bg:['#b3121b','#5a0509'],ac:'#ffd27a',tx:'#fff6e6',sub:'#ffb36b'},
+ modern:{bg:['#101828','#05070d'],ac:'#e8b4a0',tx:'#ffffff',sub:'#9fb3d1'},
+ floral:{bg:['#fff1ee','#f9d5d9'],ac:'#c2476b',tx:'#4a1f2c',sub:'#6b8a45'}
+};
+const L={
+ hi:{g:'॥ श्री गणेशाय नमः ॥',gs:'शुभ विवाह में आपका स्वागत है',weds:'संग',wedT:'शुभ विवाह',tilak:'तिलक समारोह',haldi:'हल्दी समारोह',mand:'शुभ विवाह',mands:'मंडप में पावन फेरे',inv:'आप सादर आमंत्रित हैं',loc:'स्थान',dG:'दूल्हा',dB:'दुल्हन',cl:'आपके आशीर्वाद के अभिलाषी'},
+ en:{g:'॥ Shri Ganeshaya Namah ॥',gs:'Welcome to our wedding celebration',weds:'weds',wedT:'The Wedding',tilak:'Tilak Ceremony',haldi:'Haldi Ceremony',mand:'The Wedding',mands:'Sacred vows at the mandap',inv:'You are cordially invited',loc:'Venue',dG:'Groom',dB:'Bride',cl:'With blessings and love'}
+};
+let theme='royal',lang='hi',photos={g:null,b:null},OFF=0,cur=12;
+const A=()=>TH[theme].ac,TX=()=>TH[theme].tx,SUB=()=>TH[theme].sub;
+const ease=x=>1-Math.pow(1-x,3);
+
+function data(){
+  const t=L[lang],fd=v=>v?new Date(v+'T00:00:00').toLocaleDateString(lang==='hi'?'hi-IN':'en-IN',{day:'numeric',month:'long',year:'numeric'}):'';
+  return{g:$('groom').value.trim()||t.dG,b:$('bride').value.trim()||t.dB,tl:fd($('tilak').value),hl:fd($('haldi').value),wd:fd($('wedding').value),venue:$('venue').value.trim()};
+}
+function tx(s,x,y,size,color,wt=600){ctx.font=wt+' '+size+'px '+SERIF;ctx.fillStyle=color;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(s,x,y);}
+function fit(s,max,size,wt){ctx.font=wt+' '+size+'px '+SERIF;while(ctx.measureText(s).width>max&&size>20){size-=2;ctx.font=wt+' '+size+'px '+SERIF;}return size;}
+function wrap(s,max,size){ctx.font='600 '+size+'px '+SERIF;const w=s.split(/\s+/),out=[];let l='';for(const x of w){const n=l?l+' '+x:x;if(ctx.measureText(n).width>max&&l){out.push(l);l=x}else l=n}if(l)out.push(l);return out.slice(0,3);}
+function mandala(cx,cy,r,rot,a){ctx.save();ctx.translate(cx,cy);ctx.rotate(rot);ctx.strokeStyle=A();ctx.globalAlpha*=a;ctx.lineWidth=2;for(let i=0;i<16;i++){ctx.rotate(Math.PI/8);ctx.beginPath();ctx.ellipse(0,r*.55,r*.16,r*.45,0,0,6.283);ctx.stroke();}ctx.beginPath();ctx.arc(0,0,r*.2,0,6.283);ctx.stroke();ctx.restore();}
+function photo(img,cx,cy,r,name){
+  ctx.save();ctx.beginPath();ctx.arc(cx,cy,r,0,6.283);ctx.clip();
+  if(img){const s=Math.max(2*r/img.width,2*r/img.height);ctx.drawImage(img,cx-img.width*s/2,cy-img.height*s/2,img.width*s,img.height*s);}
+  else{ctx.fillStyle='rgba(128,128,128,.25)';ctx.fillRect(cx-r,cy-r,2*r,2*r);tx(name.charAt(0),cx,cy,r*.9,A(),800);}
+  ctx.restore();ctx.strokeStyle=A();ctx.lineWidth=6;ctx.beginPath();ctx.arc(cx,cy,r+8,0,6.283);ctx.stroke();
+}
+function bg(t){
+  const th=TH[theme],g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,th.bg[0]);g.addColorStop(1,th.bg[1]);ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  for(let i=0;i<28;i++){const x=((i*97.13*7)%W+Math.sin(t*.6+i)*40+W)%W,y=((i*97.13*13+t*40*(.5+(i%5)/5))%(H+40))-20;ctx.globalAlpha=.35;ctx.fillStyle=i%2?th.ac:th.sub;ctx.beginPath();ctx.ellipse(x,y,8,4,t+i,0,6.283);ctx.fill();}
+  ctx.globalAlpha=1;ctx.strokeStyle=th.ac;ctx.lineWidth=3;ctx.strokeRect(22,22,W-44,H-44);ctx.lineWidth=1;ctx.strokeRect(32,32,W-64,H-64);
+}
+function titleScene(title,date,d,t,T,haldi){
+  mandala(W/2,H/2,300,T*.12,.35);
+  if(haldi){ctx.save();ctx.fillStyle='rgba(255,190,0,.10)';ctx.fillRect(0,0,W,H);for(let i=0;i<40;i++){const x=(i*131)%W,y=((i*57+T*70)%(H+60))-30;ctx.fillStyle=i%2?'#ffb703':'#ff9f1c';ctx.globalAlpha=.8;ctx.beginPath();ctx.arc(x,y,8+(i%4)*2,0,6.283);ctx.fill();}ctx.restore();}
+  tx(title,W/2,270+OFF,fit(title,900,96,800),A(),800);
+  if(date)tx(date,W/2,390+OFF,fit(date,900,58,600),TX());
+  tx(d.g+'  '+t.weds+'  '+d.b,W/2,520+OFF,fit(d.g+'  '+t.weds+'  '+d.b,900,44,600),SUB());
+}
+const S=[
+ (p,T,d,t)=>{mandala(W/2,H/2,340,T*.15,.5);mandala(W/2,H/2,230,-T*.2,.6);ctx.save();ctx.shadowColor=A();ctx.shadowBlur=40;tx('ॐ',W/2,H/2-30,230,A(),800);ctx.restore();tx(t.g,W/2,H-190+OFF,52,TX());tx(t.gs,W/2,H-125+OFF,32,SUB());},
+ (p,T,d,t)=>{photo(photos.g,290,340,150,d.g);photo(photos.b,990,340,150,d.b);
+  tx(d.g,W/2,260+OFF,fit(d.g,480,72,800),TX(),800);tx(t.weds,W/2,345+OFF,44,A());tx(d.b,W/2,430+OFF,fit(d.b,480,72,800),TX(),800);tx(t.wedT,W/2,560+OFF,40,SUB());},
+ (p,T,d,t)=>titleScene(t.tilak,d.tl,d,t,T,false),
+ (p,T,d,t)=>titleScene(t.haldi,d.hl,d,t,T,true),
+ (p,T,d,t)=>{
+  ctx.strokeStyle=A();ctx.lineWidth=14;ctx.beginPath();ctx.moveTo(330,420);ctx.lineTo(330,640);ctx.moveTo(950,420);ctx.lineTo(950,640);ctx.stroke();
+  ctx.lineWidth=10;ctx.beginPath();ctx.arc(640,420,310,Math.PI,Math.PI*2);ctx.stroke();
+  const n=Math.floor(28*Math.min(1,p*3));for(let k=0;k<=n;k++){const a=Math.PI+Math.PI*k/28;ctx.fillStyle=k%2?'#ff9f1c':'#ffb703';ctx.beginPath();ctx.arc(640+310*Math.cos(a),420+310*Math.sin(a),12,0,6.283);ctx.fill();}
+  tx(t.mand,W/2,330+OFF,fit(t.mand,520,84,800),A(),800);if(d.wd)tx(d.wd,W/2,430+OFF,fit(d.wd,560,48,600),TX());tx(t.mands,W/2,500+OFF,fit(t.mands,560,34,600),SUB());},
+ (p,T,d,t)=>{
+  ctx.fillStyle='#fff8ea';ctx.fillRect(250,56,780,610);ctx.strokeStyle=A();ctx.lineWidth=4;ctx.strokeRect(264,70,752,582);
+  const C='#5a0f1e',G='#9a6a14';photo(photos.g,350,190,52,d.g);photo(photos.b,930,190,52,d.b);
+  tx(t.inv,W/2,112,34,G);const nm=d.g+'  &  '+d.b;tx(nm,W/2,196,fit(nm,470,54,800),C,800);
+  ctx.strokeStyle=G;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(420,268);ctx.lineTo(860,268);ctx.stroke();
+  let y=315;if(d.tl){tx(t.tilak+': '+d.tl,W/2,y,fit(t.tilak+': '+d.tl,700,32,600),C);y+=48;}
+  if(d.hl){tx(t.haldi+': '+d.hl,W/2,y,fit(t.haldi+': '+d.hl,700,32,600),C);y+=48;}
+  if(d.wd){tx(t.wedT+': '+d.wd,W/2,y,fit(t.wedT+': '+d.wd,700,38,800),C,800);y+=62;}
+  if(d.venue){tx(t.loc,W/2,y,26,G);y+=40;for(const l of wrap(d.venue,680,28)){tx(l,W/2,y,28,C);y+=38;}}
+  tx(t.cl,W/2,622,24,G);}
+];
+function render(T){
+  ctx.globalAlpha=1;ctx.shadowBlur=0;const d=data(),t=L[lang];bg(T);
+  const i=Math.min(N-1,Math.floor(T/SCN)),ls=T-i*SCN;
+  ctx.globalAlpha=Math.max(0,Math.min(1,ls/.7,i===N-1?1:(SCN-ls)/.7));OFF=(1-ease(Math.min(1,ls/1.2)))*30;
+  S[i](ls/SCN,T,d,t);ctx.globalAlpha=1;ctx.fillStyle=A();ctx.fillRect(40,H-40,(W-80)*T/TOTAL,3);
+}
+/* ---------- audio ---------- */
+let AC=null,master=null;
+function music(dest){
+  AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();
+  master=AC.createGain();master.gain.value=.55;master.connect(AC.destination);if(dest)master.connect(dest);
+  const t0=AC.currentTime+.05,base=293.66;
+  const dr=AC.createOscillator(),dg=AC.createGain();dr.frequency.value=base/2;dg.gain.value=.12;dr.connect(dg);dg.connect(master);dr.start(t0);dr.stop(t0+TOTAL);
+  const lfo=AC.createOscillator(),lg=AC.createGain();lfo.frequency.value=5.5;lg.gain.value=7;lfo.connect(lg);lfo.start(t0);lfo.stop(t0+TOTAL);
+  const mel=[0,4,5,7,8,7,5,4,5,4,1,0,1,4,0,0];
+  for(let k=0;k<TOTAL*2;k++){
+    const at=t0+k*.5,odd=k%2;
+    const o=AC.createOscillator(),g=AC.createGain();o.frequency.setValueAtTime(odd?230:150,at);o.frequency.exponentialRampToValueAtTime(odd?170:55,at+(odd?.1:.2));
+    g.gain.setValueAtTime(odd?.25:.7,at);g.gain.exponentialRampToValueAtTime(.0001,at+(odd?.12:.3));o.connect(g);g.connect(master);o.start(at);o.stop(at+.35);
+    const s=AC.createOscillator(),f=AC.createBiquadFilter(),sg=AC.createGain();s.type='sawtooth';s.frequency.value=base*2*Math.pow(2,mel[k%16]/12);lg.connect(s.frequency);
+    f.type='bandpass';f.frequency.value=1400;f.Q.value=1.4;sg.gain.setValueAtTime(.0001,at);sg.gain.linearRampToValueAtTime(.16,at+.06);sg.gain.exponentialRampToValueAtTime(.0001,at+.49);
+    s.connect(f);f.connect(sg);sg.connect(master);s.start(at);s.stop(at+.5);
+  }
+}
+/* ---------- voice ---------- */
+function lines(d){
+  const hi=lang==='hi',j=(a)=>a.filter(Boolean).join(', ');
+  return hi?['श्री गणेशाय नमः। शुभ विवाह में आपका स्वागत है।',d.g+' और '+d.b+' का शुभ विवाह।',j(['तिलक समारोह',d.tl]),j(['हल्दी समारोह',d.hl]),j(['शुभ विवाह',d.wd,d.venue]),'आप सभी सादर आमंत्रित हैं।']
+   :['Shri Ganeshaya Namah. Welcome to our wedding.',d.g+' weds '+d.b+'.',j(['Tilak ceremony',d.tl]),j(['Haldi ceremony',d.hl]),j(['The wedding',d.wd,d.venue]),'You are all cordially invited.'];
+}
+function speak(s){
+  const sel=$('voice').value;if(sel==='off'||!('speechSynthesis' in window))return;
+  const u=new SpeechSynthesisUtterance(s);u.lang=lang==='hi'?'hi-IN':'en-IN';
+  const vs=speechSynthesis.getVoices().filter(v=>v.lang.toLowerCase().startsWith(lang==='hi'?'hi':'en'));
+  const fem=sel==='f',v=vs.find(x=>(fem?/female|woman|swara|heera|kalpana|neerja|zira|samantha|lekha/i:/\bmale\b|hemant|ravi|prabhat|madhur|david|rishi/i).test(x.name))||vs[0];
+  if(v)u.voice=v;u.pitch=fem?1.15:.8;u.rate=.9;speechSynthesis.speak(u);
+}
+/* ---------- playback + recording ---------- */
+let playing=false,t0=0,raf=0,lastS=-1,rec=null,chunks=[],dl=null;
+function msg(s){$('msg').textContent=s;}
+function loop(now){
+  if(!playing)return;cur=(now-t0)/1000;
+  if(cur>=TOTAL){cur=TOTAL-.01;render(cur);stop(false);return;}
+  const si=Math.floor(cur/SCN);if(si!==lastS){lastS=si;if(!rec&&$('voice').value!=='off'){speechSynthesis.cancel();speak(lines(data())[si]);}}
+  render(cur);$('seek').value=cur;raf=requestAnimationFrame(loop);
+}
+function start(record){
+  stop(true);cur=0;lastS=-1;let dest=null;
+  const wantMusic=$('music').value==='1';
+  if(wantMusic||record){AC=AC||new(window.AudioContext||window.webkitAudioContext)();}
+  if(record){
+    dest=AC.createMediaStreamDestination();
+    const tracks=[...cv.captureStream(30).getVideoTracks()];if(wantMusic)tracks.push(...dest.stream.getAudioTracks());
+    const mt=['video/mp4;codecs=avc1','video/webm;codecs=vp9,opus','video/webm'].find(m=>window.MediaRecorder&&MediaRecorder.isTypeSupported(m));
+    if(!mt){msg('इस ब्राउज़र में वीडियो रिकॉर्डिंग उपलब्ध नहीं है। Chrome में खोलकर देखें।');return;}
+    chunks=[];rec=new MediaRecorder(new MediaStream(tracks),{mimeType:mt,videoBitsPerSecond:4e6});
+    rec.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
+    const r=rec;rec.onstop=()=>finish(r,mt);rec.start(500);msg('रिकॉर्डिंग चल रही है… लगभग 48 सेकंड, टैब खुला रखें।');
+  }else msg('');
+  if(wantMusic)music(dest);
+  playing=true;t0=performance.now();raf=requestAnimationFrame(loop);
+}
+function stop(silent){
+  playing=false;cancelAnimationFrame(raf);if('speechSynthesis' in window)speechSynthesis.cancel();
+  if(master){try{master.disconnect()}catch(e){}master=null;}
+  if(rec&&rec.state!=='inactive'){const r=rec;if(silent===true){r.cancelled=true;}r.stop();}
+}
+async function finish(r,mt){
+  if(rec===r)rec=null;if(r.cancelled){msg('रिकॉर्डिंग रद्द हुई।');return;}
+  const blob=new Blob(chunks,{type:mt.split(';')[0]}),ext=mt.includes('mp4')?'mp4':'webm';
+  if(!dl&&window.Android){(async()=>{const buf=new Uint8Array(await blob.arrayBuffer());Android.begin('shaadi-invitation.'+ext);const C=600000;for(let i=0;i<buf.length;i+=C){let t='';const e=Math.min(i+C,buf.length);for(let j=i;j<e;j+=30000)t+=String.fromCharCode.apply(null,buf.subarray(j,Math.min(j+30000,e)));Android.chunk(btoa(t));}Android.end();msg('वीडियो Downloads फ़ोल्डर में सेव हो गया।');})();return;}
+  if(!dl){msg('इस व्यू में सेव उपलब्ध नहीं है। Claude में artifact खोलकर कोशिश करें।');return;}
+  msg('वीडियो तैयार है। सेव करने की अनुमति दें।');
+  try{await dl.save({filename:'shaadi-invitation.'+ext,data:blob});msg('वीडियो सेव हो गया ('+ext.toUpperCase()+')।');}
+  catch(e){msg(e&&e.code==='declined'?'सेव रद्द किया गया।':'सेव नहीं हो सका ('+(e&&e.code||'error')+')।');}
+}
+/* ---------- UI wiring ---------- */
+function refresh(){render(cur);const d=data();
+  const txt=(lang==='hi'?'आप सादर आमंत्रित हैं! ':'You are cordially invited! ')+d.g+' & '+d.b+(d.wd?' | '+d.wd:'')+(d.venue?' | '+d.venue:'');
+  $('wa').href='https://wa.me/?text='+encodeURIComponent(txt);}
+function seg(id,cb){const el=$(id);el.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;el.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');cb(b.dataset.v);refresh();});}
+seg('themes',v=>theme=v);seg('langs',v=>lang=v);
+['groom','bride','tilak','haldi','wedding','venue'].forEach(id=>$(id).addEventListener('input',refresh));
+function loadPhoto(id,key){$(id).addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{photos[key]=im;refresh();};im.src=r.result;};r.readAsDataURL(f);});}
+loadPhoto('gphoto','g');loadPhoto('bphoto','b');
+$('play').onclick=()=>start(false);$('stop').onclick=()=>{stop(true);msg('');};$('save').onclick=()=>start(true);
+$('seek').addEventListener('input',e=>{if(playing)stop(true);cur=parseFloat(e.target.value);refresh();});
+(async()=>{try{if(window.claude)dl=await claude.use('downloads');}catch(e){dl=null;}if(!dl)$('save').title='इस व्यू में सेव उपलब्ध नहीं';})();
+if('speechSynthesis' in window)speechSynthesis.getVoices();
+refresh();
+if(document.fonts){Promise.all([document.fonts.load('800 40px "Noto Serif Devanagari"'),document.fonts.load('600 40px "Noto Serif Devanagari"')]).then(refresh).catch(()=>{});}
+</script>
+</body>
+</html>
